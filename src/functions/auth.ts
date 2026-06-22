@@ -4,6 +4,7 @@ import { AuthRequest, AuthRequestSchema } from "../schema/auth.schema";
 import { ApiErrorResponse, InvalidRequest } from "../schema/response";
 import { getGithubUser } from "../services/github";
 import { syncUser } from "../services/user.service";
+import { generateJWT } from "../utils/jwt";
 
 export async function auth(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     const validation = AuthRequestSchema.safeParse(await request.json());
@@ -35,11 +36,20 @@ export async function auth(request: HttpRequest, context: InvocationContext): Pr
 
         if (!user) return ApiErrorResponse(syncError);
 
+        const token = generateJWT({
+            username: user.username,
+            email: user.email,
+        })
+
         return {
             status: 200,
             jsonBody: {
-                message: "User authenticated successfully",
-                user
+                token: token,
+                user: {
+                    username: user.username,
+                    name: user.name,
+                    email: user.email,
+                }
             }
         };
     } catch (error) {
