@@ -25,7 +25,6 @@ export async function auth(request: HttpRequest, context: InvocationContext): Pr
         const { access_token } = response.data;
 
         const { githubUser, githubUserError } = await getGithubUser(access_token);
-
         if (!githubUser) {
             return ApiErrorResponse(
                 githubUserError || "Failed to fetch user from GitHub"
@@ -33,7 +32,6 @@ export async function auth(request: HttpRequest, context: InvocationContext): Pr
         }
 
         const {user, syncError} = await syncUser(githubUser);
-
         if (!user) return ApiErrorResponse(syncError);
 
         const token = generateJWT({

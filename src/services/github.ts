@@ -10,10 +10,12 @@ export async function getGithubUser(accessToken: string): Promise<{ githubUser?:
     });
 
     const user = UserSchema.safeParse({
+        id: userResponse.data.login,
         username: userResponse.data.login,
         name: userResponse.data.name || "",
         email: userResponse.data.email || "",
-        githubToken: accessToken
+        githubToken: accessToken,
+        type: "user"
     });
 
     if (!user.success) {

@@ -8,6 +8,6 @@ const client = new CosmosClient({
 
 const database = client.database("resumein");
 
-export const usersContainer = database.container("users");
+export const dataContainer = database.container("Data");
 
 export default client;
