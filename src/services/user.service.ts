@@ -1,17 +1,26 @@
 import { encrypt } from "../common/crypt";
-import { usersContainer } from "../config/cosmos";
 import { UserModel } from "../models/user.model";
+import { createUser, getUserByUsername } from "../repositories/user.repo";
 
-export async function upsertUser(user: UserModel) {
-    
-    const document = {
-        username: user.username,
-        name: user.name,
-        email: user.email,
-        githubToken: encrypt(user.githubToken)
-    };
+export async function syncUser(
+    user: UserModel
+): Promise<{ user?: UserModel; syncError?: string }> {
+    try {
+        const existingUser = await getUserByUsername(user.username);
 
-    const { resource: createdUser } = await usersContainer.items.upsert(document);
+        if (existingUser) {
+            return { user: existingUser };
+        }
 
-    return createdUser;
+        const createdUser = await createUser({
+            ...user,
+            githubToken: encrypt(user.githubToken)
+        });
+
+        return { user: createdUser };
+    } catch (error: any) {
+        return {
+            syncError: error.message || "Failed to sync user"
+        };
+    }
 }
