@@ -8,7 +8,11 @@ export async function getUserByUsername(username: string) {
 }
 
 export async function createUser(user: UserModel) {
-    const { resource } = await usersContainer.items.create<UserModel>(user);
+    const userToCreate = {
+        ...user,
+        id: user.username
+    };
+    const { resource } = await usersContainer.items.create<UserModel>(userToCreate);
 
     return resource;
 }
