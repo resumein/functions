@@ -1,7 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from "axios";
 import { AuthRequest, AuthRequestSchema } from "../schema/auth.schema";
-import { ApiErrorResponse, InvalidRequest } from "../common/response";
+import { ApiErrorResponse, InvalidRequest } from "../schema/response";
 import { getGithubUser } from "../services/github";
 import { syncUser } from "../services/user.service";
 

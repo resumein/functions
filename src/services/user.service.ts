@@ -1,4 +1,4 @@
-import { encrypt } from "../common/crypt";
+import { encrypt } from "../utils/crypt";
 import { UserModel } from "../models/user.model";
 import { createUser, getUserByUsername } from "../repositories/user.repo";
 
