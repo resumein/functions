@@ -3,7 +3,7 @@ import axios from "axios";
 import { AuthRequest, AuthRequestSchema } from "../schema/auth.schema";
 import { ApiErrorResponse, InvalidRequest } from "../common/response";
 import { getGithubUser } from "../services/github";
-import { upsertUser } from "../services/user.service";
+import { syncUser } from "../services/user.service";
 
 export async function auth(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     const validation = AuthRequestSchema.safeParse(await request.json());
@@ -31,7 +31,9 @@ export async function auth(request: HttpRequest, context: InvocationContext): Pr
             );
         }
 
-        const user = await upsertUser(githubUser);
+        const {user, syncError} = await syncUser(githubUser);
+
+        if (!user) return ApiErrorResponse(syncError);
 
         return {
             status: 200,
@@ -41,7 +43,6 @@ export async function auth(request: HttpRequest, context: InvocationContext): Pr
             }
         };
     } catch (error) {
-        context.log('Error exchanging code for token:', error.message);
         return ApiErrorResponse('Failed to exchange code for access token')
     }
 };
