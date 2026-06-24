@@ -80,7 +80,12 @@ export async function item(request: HttpRequest, context: InvocationContext, aut
                         status: 404,
                         jsonBody: { error: "Item not found" }
                     };
-                }        
+                } else {
+                    return {
+                        status: 500,
+                        jsonBody: { error: "Failed to update item" }
+                    };
+                }
             }
 
         case 'DELETE':

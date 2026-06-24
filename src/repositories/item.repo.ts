@@ -1,10 +1,6 @@
 import { dataContainer } from "../config/cosmos";
 import { ItemModel, ItemType } from "../models/item.model";
 
-export function getItemById(id: string) {
-    return dataContainer.item(id, id).read();
-}
-
 export async function getItemsByUsername(username: string, type?: ItemType) {
     const query = type
         ? {
