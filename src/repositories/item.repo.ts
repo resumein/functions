@@ -22,6 +22,10 @@ export async function getItemsByUsername(username: string, type?: ItemType) {
             query: `
                 SELECT * FROM c
                 WHERE c.username = @username
+                AND ARRAY_CONTAINS(
+                    ["project", "education", "experience", "certification", "award"],
+                    c.type
+                )
             `,
             parameters: [
                 { name: "@username", value: username }

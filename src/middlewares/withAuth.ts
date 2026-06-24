@@ -7,23 +7,39 @@ export interface AuthenticatedRequest extends Omit<HttpRequest, "user"> {
     user: TokenPayload;
 }
 
-export function withAuth(handler: (request: AuthenticatedRequest, context: InvocationContext) => Promise<HttpResponseInit>): AzureHttpHandler {
-    return async (request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> => {
-        
+export interface AuthenticatedContext {
+    user: TokenPayload;
+}
+
+export function withAuth(
+    handler: (
+        request: HttpRequest,
+        context: InvocationContext,
+        auth: AuthenticatedContext
+    ) => Promise<HttpResponseInit>
+): AzureHttpHandler {
+    return async (
+        request: HttpRequest,
+        context: InvocationContext
+    ): Promise<HttpResponseInit> => {
+
         const authHeader = request.headers.get("authorization");
+
         const { isValid, payload, error } = verifyJWT(authHeader);
 
         if (!isValid || !payload) {
             return {
                 status: 401,
-                jsonBody: { error: error || "Unauthorized access" }
+                jsonBody: {
+                    error: error || "Unauthorized access"
+                }
             };
         }
 
-        // Cast through 'unknown' first to safely override the native 'user' property
-        const authenticatedRequest = request as unknown as AuthenticatedRequest;
-        authenticatedRequest.user = payload;
-
-        return handler(authenticatedRequest, context);
+        return handler(
+            request,
+            context,
+            { user: payload }
+        );
     };
 }
