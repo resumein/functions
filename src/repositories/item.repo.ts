@@ -41,6 +41,14 @@ export async function getItemsByUsername(username: string, type?: ItemType) {
     return resources;
 }
 
+export function deleteItem(id: string, username: string) {
+    return dataContainer.item(id, username).delete();
+}
+
+export function updateItem(item: ItemModel) {
+    return dataContainer.item(item.id, item.username).replace(item);
+}
+
 export function createItem(item: ItemModel) {
     return dataContainer.items.create<ItemModel>(item);
 }

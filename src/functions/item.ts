@@ -1,7 +1,8 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { AuthenticatedContext, withAuth } from "../middlewares/withAuth";
-import { CreateItemSchema, ItemModel, ItemSchema } from "../models/item.model";
-import { createItem, getItemsByUsername } from "../repositories/item.repo";
+import { ItemModel, ItemSchema } from "../models/item.model";
+import { createItem, deleteItem, getItemsByUsername } from "../repositories/item.repo";
+import { CreateItemSchema, DeleteItemSchema } from "../schema/item.schema";
 
 function parseItem(item: ItemModel): ItemModel {
     return ItemSchema.parse(item);
@@ -14,17 +15,17 @@ export async function item(request: HttpRequest, context: InvocationContext, aut
     switch (request.method) {
         case 'GET':
             const items = await getItemsByUsername(username);
-            console.log(JSON.stringify(items, null, 2));
+
             return {
                 status: 200,
                 jsonBody: items.map(parseItem)
             };
 
         case 'POST':
-            const body = CreateItemSchema.parse(await request.json());
+            const postBody = CreateItemSchema.parse(await request.json());
 
             const newItem: ItemModel = {
-                ...body,
+                ...postBody,
                 id: crypto.randomUUID(),
                 username,
                 createdAt: new Date(),
@@ -45,6 +46,28 @@ export async function item(request: HttpRequest, context: InvocationContext, aut
                 jsonBody: parseItem(resource)
             };
 
+        case 'DELETE':
+            const itemId = request.params.id;
+            if (!itemId) {
+                return {
+                    status: 400,
+                    jsonBody: { error: "Missing item ID" }
+                };
+            }
+
+            try {
+                await deleteItem(itemId, username);
+
+                return {
+                    status: 204
+                };
+            } catch {
+                return {
+                    status: 404,
+                    jsonBody: { error: "Item not found" }
+                };
+            }
+
         default:
             return {
                 status: 405,
@@ -54,7 +77,8 @@ export async function item(request: HttpRequest, context: InvocationContext, aut
 };
 
 app.http('item', {
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE'],
+    route: 'item/{id?}',
     authLevel: 'anonymous',
     handler: withAuth(item)
 });
