@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const CreateProjectSchema = z.object({
+const CreateProjectSchema = z.object({
     type: z.literal("project"),
     name: z.string(),
     github: z.string(),
@@ -10,7 +10,7 @@ export const CreateProjectSchema = z.object({
     toDate: z.coerce.date().optional()
 });
 
-export const CreateEducationSchema = z.object({
+const CreateEducationSchema = z.object({
     type: z.literal("education"),
     school: z.string(),
     degree: z.string(),
@@ -20,7 +20,7 @@ export const CreateEducationSchema = z.object({
     grade: z.string().optional()
 });
 
-export const CreateExperienceSchema = z.object({
+const CreateExperienceSchema = z.object({
     type: z.literal("experience"),
     title: z.string(),
     company: z.string(),
@@ -30,7 +30,7 @@ export const CreateExperienceSchema = z.object({
     role: z.array(z.string()).default([])
 });
 
-export const CreateCertificationSchema = z.object({
+const CreateCertificationSchema = z.object({
     type: z.literal("certification"),
     title: z.string(),
     platform: z.string(),
@@ -40,7 +40,7 @@ export const CreateCertificationSchema = z.object({
     role: z.array(z.string()).default([])
 });
 
-export const CreateAwardSchema = z.object({
+const CreateAwardSchema = z.object({
     type: z.literal("award"),
     title: z.string(),
     issuer: z.string(),
@@ -61,12 +61,6 @@ export const CreateItemSchema = z.discriminatedUnion("type", [
 export const DeleteItemSchema = z.object({
     id: z.string()
 });
-
-export type CreateProjectRequest = z.infer<typeof CreateProjectSchema>;
-export type CreateEducationRequest = z.infer<typeof CreateEducationSchema>;
-export type CreateExperienceRequest = z.infer<typeof CreateExperienceSchema>;
-export type CreateCertificationRequest = z.infer<typeof CreateCertificationSchema>;
-export type CreateAwardRequest = z.infer<typeof CreateAwardSchema>;
 
 export type CreateItemRequest = z.infer<typeof CreateItemSchema>;
 
