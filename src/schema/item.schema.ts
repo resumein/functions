@@ -3,12 +3,12 @@ import { z } from 'zod';
 const CreateProjectSchema = z.object({
     type: z.literal("project"),
     name: z.string(),
-    github: z.string(),
-    url: z.string().url().optional(),
+    github: z.string().nullish(),
+    url: z.string().nullish(),
     description: z.string(),
     fromDate: z.coerce.date(),
-    toDate: z.coerce.date().optional(),
-    technologiesUsed: z.string().optional()
+    toDate: z.coerce.date().nullish(),
+    technologiesUsed: z.string().nullish()
 });
 
 const CreateEducationSchema = z.object({
@@ -17,9 +17,9 @@ const CreateEducationSchema = z.object({
     degree: z.string(),
     field: z.string(),
     fromDate: z.coerce.date(),
-    toDate: z.coerce.date().optional(),
-    grade: z.string().optional(),
-    location: z.string().optional()
+    toDate: z.coerce.date().nullish(),
+    grade: z.string().nullish(),
+    location: z.string().nullish()
 });
 
 const CreateExperienceSchema = z.object({
@@ -27,19 +27,19 @@ const CreateExperienceSchema = z.object({
     title: z.string(),
     company: z.string(),
     fromDate: z.coerce.date(),
-    toDate: z.coerce.date().optional(),
-    description: z.string().optional(),
+    toDate: z.coerce.date().nullish(),
+    description: z.string().nullish(),
     role: z.array(z.string()).default([]),
-    location: z.string().optional()
+    location: z.string().nullish()
 });
 
 const CreateCertificationSchema = z.object({
     type: z.literal("certification"),
     title: z.string(),
     platform: z.string(),
-    description: z.string().optional(),
-    url: z.string().url().optional(),
-    completedOn: z.coerce.date().optional(),
+    description: z.string().nullish(),
+    url: z.string().nullish(),
+    completedOn: z.coerce.date().nullish(),
     role: z.array(z.string()).default([])
 });
 
@@ -48,8 +48,8 @@ const CreateAwardSchema = z.object({
     title: z.string(),
     issuer: z.string(),
     awardType: z.string(),
-    description: z.string().optional(),
-    date: z.coerce.date().optional(),
+    description: z.string().nullish(),
+    date: z.coerce.date().nullish(),
     role: z.array(z.string()).default([])
 });
 
