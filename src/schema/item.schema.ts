@@ -7,7 +7,8 @@ const CreateProjectSchema = z.object({
     url: z.string().url().optional(),
     description: z.string(),
     fromDate: z.coerce.date(),
-    toDate: z.coerce.date().optional()
+    toDate: z.coerce.date().optional(),
+    technologiesUsed: z.string().optional()
 });
 
 const CreateEducationSchema = z.object({
@@ -17,7 +18,8 @@ const CreateEducationSchema = z.object({
     field: z.string(),
     fromDate: z.coerce.date(),
     toDate: z.coerce.date().optional(),
-    grade: z.string().optional()
+    grade: z.string().optional(),
+    location: z.string().optional()
 });
 
 const CreateExperienceSchema = z.object({
@@ -27,7 +29,8 @@ const CreateExperienceSchema = z.object({
     fromDate: z.coerce.date(),
     toDate: z.coerce.date().optional(),
     description: z.string().optional(),
-    role: z.array(z.string()).default([])
+    role: z.array(z.string()).default([]),
+    location: z.string().optional()
 });
 
 const CreateCertificationSchema = z.object({
