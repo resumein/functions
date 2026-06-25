@@ -47,6 +47,12 @@ For each category, extract the relevant fields exactly as specified below:
    - date (string, format YYYY-MM-DD or YYYY-MM, optional)
    - role (array of strings, any additional details, default to empty array)
 
+CRITICAL RULES:
+- Do NOT rewrite, paraphrase, edit, clean up, polish, or summarize any extracted text.
+- Preserve the exact verbatim wording from the input resume text for all descriptions, names, titles, and role bullet points.
+- If the original resume text has multiple bullet points or descriptions for a single item, and the target field expects a single string (like the "description" field in projects or experience), concatenate them using a space, preserving all text verbatim.
+- Your ONLY job is to structure and classify; do not attempt to improve or modify any wording.
+
 Output MUST be a single JSON object with the following structure:
 {
   "items": [
