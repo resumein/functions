@@ -48,3 +48,8 @@ export function updateItem(item: ItemModel) {
 export function createItem(item: ItemModel) {
     return dataContainer.items.create<ItemModel>(item);
 }
+
+export async function createItemsBulk(items: ItemModel[]) {
+    const promises = items.map(item => dataContainer.items.create<ItemModel>(item));
+    return Promise.all(promises);
+}
